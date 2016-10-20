@@ -28,6 +28,7 @@
         </div>
         <!-- APPLICATION START HERE -->
 
+    <div id="table">
         <table class="table table-hover">
           <thead>
             <tr>
@@ -41,7 +42,21 @@
           <tbody id="tb_film">
           </tbody>
         </table>
-        
+    </div>
+    <div id="dettaglio">
+        <table class="table table-hover">
+          <thead>
+            <tr>
+              <th>Immagine</th>
+              <th>Voti</th>
+              <th>Descrizione</th>
+            </tr>
+          </thead>
+          <tbody id="tb_det">
+          </tbody>
+        </table>
+    </div>
+
     </div>
     <!-- JQUERY DEPENDENCIES -->
     <script src="js/jquery-3.1.1.min.js"></script>
@@ -52,9 +67,57 @@
     <!-- APPLICATION  -->
     <script src="js/app.js"></script>
     <script type="text/javascript">
+       $('tbody').on("click","tr",function(){
+            console.log(this);
+            var endpoint='http://www.omdbapi.com/?i=';
+            var url=endpoint;
+            var ricevuto=this.id;
 
+            /*var data={
+              s:titolo,
+            };*/
+            $.ajax({
+              url: url + ricevuto,
+              method: 'GET'
+            }).then(function(data) {
+                $("#table").hide();
+                $("#dettaglio").show();
+                console.log(data);
+                $("#tb_det").html("");
+                var film=data;
+                var tr='';
+                var img="";
+                if(film.Poster=='N/A'){
+                    img="http://placehold.it/300x450";
+                }else{
+                    img=film.Poster;
+                }
+                tr +=''+
+                "<tr>"+
+                '<td>'+'<img src="'+img+'" alt="testo" />'+'</td>'+
+                '<td>'+
+                '<p>'+'Titolo: '+film.Title+'</p>'+
+                '<p>'+'Genere: '+film.Genre+'</p>'+
+                '<p>'+'Anno: '+film.Released+'</p>'+
+                '<p>'+'Metascore: '+film.Metascore+'</p>'+
+                '<p>'+'imdbRating: '+film.imdbRating+'</p>'+
+                '<p>'+'imdbVotes: '+film.imdbVotes+'</p>'+
+                '</td>'+
+                '<td>'+
+                '<p>'+'Direttore: '+film.Director+'</p>'+
+                '<p>'+'Scrittore: '+film.Writer+'</p>'+
+                '<p>'+'Attori: '+film.Actors+'</p>'+
+                '<p>'+'?: '+film.Plot+'</p>'+
+                '<p>'+'Lingua: '+film.Language+'</p>'+
+                '<p>'+'Paese: '+film.Country+'</p>'+
+                '<p>'+'Premi: '+film.Awards+'</p>'+
+                '</td>'+
+                'tr>';
+              $("#tb_det").html(tr);
+          });
+        });
 
-        $( "#target" ).submit(function( event ) {
+        $("#target").submit(function( event ) {
             event.preventDefault();/*non mi manda su un'altra pagina*/
             var endpoint='http://www.omdbapi.com/?s=';
             var url=endpoint;
@@ -68,7 +131,7 @@
               method: 'GET'
             }).then(function(data) {
               console.log(data);
-              film=data;
+              var film=data;
               $("#tb_film").html("");
               var tr='';
               console.log(film.Search.length);
@@ -79,14 +142,16 @@
                 }else{
                     img=film.Search[i].Poster;
                 }
+                var id=film.Search[i].imdbID;
                 tr +=''+
-                '<tr>'+
+                "<tr class='dettaglio' id='"+id+"'>"+
                 '<td>'+'<b>'+(i+1)+'<b>'+'</td>'+
                 '<td>'+'<img src="'+img+'" alt="testo" />'+'</td>'+
                 '<td>'+film.Search[i].Title+'</td>'+
                 '<td>'+film.Search[i].Type+'</td>'+
                 '<td>'+film.Search[i].Year+'</td>'+
                 'tr>';
+                console.log(film.Search[i].imdbID);
 
               }
               $("#tb_film").html(tr);
