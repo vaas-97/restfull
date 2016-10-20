@@ -44,3 +44,14 @@ form button:hover{
 .glyphicon-search{
     font-size: 23px;
 }
+.selectpicker{
+	float:right;
+}
+.center{
+	text-align: center;
+}
+h1{
+	font-size: 50;
+	color: red;
+	font-style: italic;
+}

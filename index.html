@@ -16,21 +16,14 @@
     <div class="container">
         <div class="row">
             <div class="col-md-12">
-                <h1>Film</h1>
-                <div id="custom-search-input">
-                    <form id="target">
-                        <div class="input-group col-md-6">
-                            <input type="text" name="titolo" class="form-control input-lg" placeholder="Titolo Film" />
+                <h1 class="center">Film</h1>
+                <form id="target">
+                    <div id="custom-search-input">
+                        <div class="input-group col-md-12">
+                            <input type="text" name="titolo" class="form-control input-lg center" placeholder="Titolo" />
                         </div>
-                        <div class="input-group col-md-6">
-                            <select class="selectpicker">
-                              <option value="movie">Movie</option>
-                              <option value="series">Series</option>
-                              <option value="episode">Episode</option>
-                            </select>
-                        </div>
-                    </form type="submit">
-                </div>
+                    </div>
+                </form type="submit">
             </div>
         </div>
         <!-- APPLICATION START HERE -->
@@ -65,13 +58,13 @@
             event.preventDefault();/*non mi manda su un'altra pagina*/
             var endpoint='http://www.omdbapi.com/?s=';
             var url=endpoint;
-            var valore=$("form input[name='value']").val();
+            var titolo=$("input[name='titolo']").val();
 
             /*var data={
-              s:valore,
+              s:titolo,
             };*/
             $.ajax({
-              url: url + valore,
+              url: url + titolo,
               method: 'GET'
             }).then(function(data) {
               console.log(data);
@@ -80,11 +73,16 @@
               var tr='';
               console.log(film.Search.length);
               for(i=0;i<film.Search.length;i++){
-               // var obj=film[i];
+                var img="";
+                if(film.Search[i].Poster=='N/A'){
+                    img="http://placehold.it/300x450";
+                }else{
+                    img=film.Search[i].Poster;
+                }
                 tr +=''+
                 '<tr>'+
-                '<td>'+(i+1)+'</td>'+
-                '<td>'+'<img src="'+film.Search[i].Poster+'" alt="testo" />'+'</td>'+
+                '<td>'+'<b>'+(i+1)+'<b>'+'</td>'+
+                '<td>'+'<img src="'+img+'" alt="testo" />'+'</td>'+
                 '<td>'+film.Search[i].Title+'</td>'+
                 '<td>'+film.Search[i].Type+'</td>'+
                 '<td>'+film.Search[i].Year+'</td>'+
